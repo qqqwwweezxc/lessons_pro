@@ -37,10 +37,14 @@ def call_function(obj: object, method_name: str, *args):
 
 
 class Calculator:
-    def add(self, a, b):
+    """Class calculates two numbers"""
+
+    def add(self, a: float, b: float) -> float:
+        """Add two numbers"""
         return a + b
 
-    def subtract(self, a, b):
+    def subtract(self, a: float, b: float) -> float:
+        """Subtract two numbers"""
         return a - b
 
 
@@ -124,11 +128,11 @@ print(obj.say_goodbye())
 
 class MutableClass:
 
-    def add_attribute(self, name, value):
+    def add_attribute(self, name: str, value) -> None:
         """Add a attribute to object"""
         setattr(self, name, value)
 
-    def remove_attribute(self, name):
+    def remove_attribute(self, name: str) -> None:
         """Delete attribute from object"""
         if hasattr(self, name):
             delattr(self, name)
@@ -169,7 +173,7 @@ class Proxy:
 
 
 class MyClass:
-    def greet(self, name):
+    def greet(self, name: str):
         return f"Hello, {name}!"
 
 
@@ -185,7 +189,7 @@ def log_methods(cls):
     for name, value in cls.__dict__.items():
         if callable(value):
 
-            def make_wrapper(method, name):
+            def make_wrapper(method, name: str):
                 def wrapper(self, *args, **kwargs):
                     print(f"Logging: {name} called with {args}")
                     return method(self, *args, **kwargs)
@@ -199,10 +203,14 @@ def log_methods(cls):
 
 @log_methods
 class MyClass:
-    def add(self, a, b):
+    """Calculates two numbers"""
+
+    def add(self, a: float, b: float):
+        """Add two numbers"""
         return a + b
 
-    def subtract(self, a, b):
+    def subtract(self, a: float, b: float):
+        """Subtract two numbers"""
         return a - b
 
 
@@ -324,7 +332,7 @@ class LimitedAttributesMeta(type):
 
     max_attrs = 3
 
-    def __new__(mcs, name, bases, attrs):
+    def __new__(mcs, name: str, bases: tuple, attrs: dict) -> None:
         real_attrs = [atr for atr in attrs if not atr.startswith("__")]
 
         if len(real_attrs) > mcs.max_attrs:
@@ -351,7 +359,7 @@ obj = LimitedClass()
 class LoggingMeta(type):
     """Metaclass which automatically adds logging when accessing any class attribute"""
 
-    def __new__(cls, name, bases, attrs):
+    def __new__(cls, name: str, bases: tuple, attrs: dict) -> None:
 
         def __getattribute__(self, item):
             if not item.startswith("__"):
@@ -388,7 +396,7 @@ class AutoMethodMeta(type):
 
     """
 
-    def __new__(cls, name, bases, attrs):
+    def __new__(cls, name: str, bases: tuple, attrs: dict) -> None:
         new_attrs = {}
 
         for attr_name, value in attrs.items():
@@ -432,7 +440,7 @@ print(p.get_age())
 class TypeCheckedMeta(type):
     """Metaclass that enforces type checking for class attributes based on type annotations."""
 
-    def __new__(cls, name, bases, attrs):
+    def __new__(cls, name: str, bases: tuple, attrs: dict) -> None:
         annotations = {}
         for base in bases:
             annotations.update(getattr(base, "__annotations__", {}))
