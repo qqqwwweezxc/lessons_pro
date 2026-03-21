@@ -5,7 +5,7 @@
 #     Тип кожного атрибута.
 
 
-def analyze_object(obj: object) -> type:
+def analyze_object(obj: object) -> None:
     """Checking object types and attributes"""
     print(f"Type of object: {type(obj)}")
     print("Attibutes and methods:")
@@ -17,10 +17,10 @@ def analyze_object(obj: object) -> type:
 
 
 class MyClass:
-    def __init__(self, value):
+    def __init__(self, value: object) -> None:
         self.value = value
 
-    def say_hello(self):
+    def say_hello(self) -> str:
         return f"Hello, {self.value}"
 
 
@@ -31,7 +31,7 @@ analyze_object(obj)
 # 'та довільні аргументи для цього методу. Функція повинна викликати відповідний метод об'єкта і повернути результат.
 
 
-def call_function(obj: object, method_name: str, *args):
+def call_function(obj: object, method_name: str, *args: object) -> object:
     method = getattr(obj, method_name)
     return method(*args)
 
@@ -57,11 +57,11 @@ print(call_function(calc, "subtract", 10, 5))
 import inspect
 
 
-def analyze_module(module_name: str):
+def analyze_module(module_name: str) -> None:
     """Analyze module and prints a list of all classes, functions, and their signatures in a module"""
 
-    functions = []
-    classes = []
+    functions: list[str] = []
+    classes: list[str] = []
 
     for name, obj in inspect.getmembers(module_name):
         if name.startswith("__"):
@@ -99,18 +99,17 @@ analyze_module("math")
 # Методи передаються у вигляді словника, де ключі — це назви методів, а значення — функції.
 
 
-def create_class(class_name: str, methods: dict):
+def create_class(class_name: str, methods: dict[str, callable]) -> type:
     """Creates class"""
-
     new_class = type(class_name, (object,), methods)
     return new_class
 
 
-def say_hello(self):
+def say_hello(self: object) -> str:
     return "Hello!"
 
 
-def say_goodbye(self):
+def say_goodbye(self: object) -> str:
     return "Goodbye!"
 
 
@@ -127,8 +126,7 @@ print(obj.say_goodbye())
 
 
 class MutableClass:
-
-    def add_attribute(self, name: str, value) -> None:
+    def add_attribute(self, name: str, value: object) -> None:
         """Add a attribute to object"""
         setattr(self, name, value)
 
@@ -159,11 +157,11 @@ class Proxy:
         """Initialaize object"""
         self.obj = obj
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> object:
         attr = getattr(self.obj, name)
         if callable(attr):
 
-            def wrapper(*args, **kwargs):
+            def wrapper(*args: object, **kwargs: object) -> object:
                 print("Calling method:")
                 print(f"{name} with args: {args}")
                 return attr(*args, **kwargs)
@@ -185,12 +183,12 @@ print(proxy.greet("Alice"))
 # Реалізуйте декоратор log_methods, який додається до класу і логуватиме виклики всіх його методів (назва методу та аргументи).
 
 
-def log_methods(cls):
+def log_methods(cls: type) -> type:
     for name, value in cls.__dict__.items():
         if callable(value):
 
-            def make_wrapper(method, name: str):
-                def wrapper(self, *args, **kwargs):
+            def make_wrapper(method: callable, name: str) -> callable:
+                def wrapper(self: object, *args: object, **kwargs: object) -> object:
                     print(f"Logging: {name} called with {args}")
                     return method(self, *args, **kwargs)
 
@@ -222,7 +220,7 @@ obj.subtract(5, 3)
 # які він наслідує від базових класів.
 
 
-def analyze_inheritance(cls):
+def analyze_inheritance(cls: type) -> None:
     """Analyze class analyzes its inheritance and deduces all the methods it inherits from base classes."""
     print(f"Class {cls.__name__} inheritance:")
     for base in cls.__mro__[1:]:
@@ -254,13 +252,13 @@ analyze_inheritance(Child)
 class DynamicProperties:
     """A class that allows dynamic creation of properties at runtime."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Initialize internal storage for property values.
         """
-        self._values = {}
+        self._values: dict[str, object] = {}
 
-    def add_property(self, name, default_value=None):
+    def add_property(self, name: str, default_value: object = None) -> None:
         """
         Dynamically adds a new property with getter and setter.
 
@@ -270,19 +268,19 @@ class DynamicProperties:
         """
         self._values[name] = default_value
 
-        def getter(instance):
+        def getter(instance: "DynamicProperties") -> object:
             """
             Return the value of the property.
             """
             return instance._values.get(name)
 
-        def setter(instance, value):
+        def setter(instance: "DynamicProperties", value: object) -> None:
             """
             Set the value of the property.
             """
             instance._values[name] = value
 
-        prop = property(getter, setter)
+        prop: property = property(getter, setter)
 
         setattr(self.__class__, name, prop)
 
@@ -303,9 +301,9 @@ class SingletonMeta(type):
     If an instance of the class has already been created, subsequent calls, returns the same object.
     """
 
-    _instance = None
+    _instance: object = None
 
-    def __call__(cls, *args, **kwargs):
+    def __call__(cls, *args: tuple, **kwargs: dict) -> object:
         if cls._instance is None:
             cls._instance = super().__call__(*args, **kwargs)
         return cls._instance
@@ -330,10 +328,10 @@ class LimitedAttributesMeta(type):
     Raises TypeError if more than `max_attrs` are defined.
     """
 
-    max_attrs = 3
+    max_attrs: int = 3
 
-    def __new__(mcs, name: str, bases: tuple, attrs: dict) -> None:
-        real_attrs = [atr for atr in attrs if not atr.startswith("__")]
+    def __new__(mcs, name: str, bases: tuple, attrs: dict) -> type:
+        real_attrs: list[str] = [atr for atr in attrs if not atr.startswith("__")]
 
         if len(real_attrs) > mcs.max_attrs:
             raise TypeError(
@@ -359,14 +357,14 @@ obj = LimitedClass()
 class LoggingMeta(type):
     """Metaclass which automatically adds logging when accessing any class attribute"""
 
-    def __new__(cls, name: str, bases: tuple, attrs: dict) -> None:
+    def __new__(cls, name: str, bases: tuple, attrs: dict) -> type:
 
-        def __getattribute__(self, item):
+        def __getattribute__(self, item: str) -> object:
             if not item.startswith("__"):
                 print(f"Logging: accessed '{item}'")
             return object.__getattribute__(self, item)
 
-        def __setattr__(self, key, value):
+        def __setattr__(self, key: str, value: object) -> None:
             if key in self.__dict__:
                 print(f"Logging: modified '{key}'")
             return object.__setattr__(self, key, value)
@@ -393,11 +391,10 @@ obj.name = "New Python"
 class AutoMethodMeta(type):
     """
     Metaclass that automatically generates getter and setter methods for all class attributes.
-
     """
 
-    def __new__(cls, name: str, bases: tuple, attrs: dict) -> None:
-        new_attrs = {}
+    def __new__(cls, name: str, bases: tuple, attrs: dict) -> type:
+        new_attrs: dict[str, object] = {}
 
         for attr_name, value in attrs.items():
             new_attrs[attr_name] = value
@@ -405,14 +402,14 @@ class AutoMethodMeta(type):
             if attr_name.startswith("__") or callable(value):
                 continue
 
-            def make_getter(attr):
-                def getter(self):
+            def make_getter(attr: str):
+                def getter(self) -> object:
                     return getattr(self, attr)
 
                 return getter
 
-            def make_setter(attr):
-                def setter(self, value):
+            def make_setter(attr: str):
+                def setter(self, value: object) -> None:
                     setattr(self, attr, value)
 
                 return setter
@@ -440,15 +437,15 @@ print(p.get_age())
 class TypeCheckedMeta(type):
     """Metaclass that enforces type checking for class attributes based on type annotations."""
 
-    def __new__(cls, name: str, bases: tuple, attrs: dict) -> None:
-        annotations = {}
+    def __new__(cls, name: str, bases: tuple, attrs: dict) -> type:
+        annotations: dict[str, type] = {}
         for base in bases:
             annotations.update(getattr(base, "__annotations__", {}))
         annotations.update(attrs.get("__annotations__", {}))
 
-        def __setattr__(self, key, value):
+        def __setattr__(self, key: str, value: object) -> None:
             if key in annotations:
-                expected_type = annotations[key]
+                expected_type: type = annotations[key]
                 if not isinstance(value, expected_type):
                     raise TypeError(
                         f"For attribute '{key}' expected type '{expected_type.__name__}', but got '{type(value).__name__}'."
