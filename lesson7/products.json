@@ -1,0 +1,40 @@
+{
+    "products": {
+        "product": [
+            {
+                "name": [
+                    {
+                        "text": "Milk"
+                    }
+                ],
+                "price": [
+                    {
+                        "text": "25"
+                    }
+                ],
+                "quantity": [
+                    {
+                        "text": "50"
+                    }
+                ]
+            },
+            {
+                "name": [
+                    {
+                        "text": "Bread"
+                    }
+                ],
+                "price": [
+                    {
+                        "text": "10"
+                    }
+                ],
+                "quantity": [
+                    {
+                        "text": "100"
+                    }
+                ]
+            }
+        ]
+    }
+}

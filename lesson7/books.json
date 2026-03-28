@@ -1,0 +1,20 @@
+[
+    {
+        "title": "Book 1",
+        "author": "Author 1",
+        "year of publication": "2015",
+        "availability": true
+    },
+    {
+        "title": "Book 2",
+        "author": "Author 2",
+        "year of publication": "2010",
+        "availability": false
+    },
+    {
+        "title": "Book 3",
+        "author": "Author 3",
+        "year of publication": 1990,
+        "availability": true
+    }
+]
