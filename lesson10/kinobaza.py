@@ -2,6 +2,7 @@ import sqlite3
 import datetime
 from typing import Tuple, Optional, Any, List, Union
 
+
 def movie_age(release_year: Optional[Union[int, str]]) -> int:
     """Calculates the number of years from the release of a movie to the current year."""
     if release_year is None:
@@ -140,6 +141,7 @@ def show_unique_genres(cursor: sqlite3.Cursor) -> None:
     for i, row in enumerate(results, 1):
         print(f"{i}. {row[0]}")
 
+
 def count_movies_by_genre(cursor: sqlite3.Cursor) -> None:
     """Function to count the number of films made in each genre"""
     cursor.execute("SELECT genre, COUNT(*) FROM movies GROUP BY genre")
@@ -237,6 +239,7 @@ def show_moives_ages(cursor: sqlite3.Cursor) -> None:
             
         print(f"{i}. Movie: \"{row[0]}\" — {age} {word}")
 
+
 def main() -> None:
     sqlite_connection: sqlite3.Connection
     cursor: sqlite3.Cursor
@@ -285,6 +288,7 @@ def main() -> None:
                 print("Unknown command. Try one more time.")
 
     sqlite_connection.close()
+
 
 if __name__ == "__main__":
     main()
