@@ -1,0 +1,71 @@
+What’s new in Python 3.14
+
+Editors:
+
+    Adam Turner and Hugo van Kemenade
+
+This article explains the new features in Python 3.14, compared to 3.13. Python 3.14 was released on 7 October 2025. For full details, see the changelog.
+
+See also
+
+PEP 745 – Python 3.14 release schedule
+Summary – Release highlights
+
+Python 3.14 is the latest stable release of the Python programming language, with a mix of changes to the language, the implementation, and the standard library. The biggest changes include template string literals, deferred evaluation of annotations, and support for subinterpreters in the standard library.
+
+The library changes include significantly improved capabilities for introspection in asyncio, support for Zstandard via a new compression.zstd module, syntax highlighting in the REPL, as well as the usual deprecations and removals, and improvements in user-friendliness and correctness.
+
+This article doesn’t attempt to provide a complete specification of all new features, but instead gives a convenient overview. For full details refer to the documentation, such as the Library Reference and Language Reference. To understand the complete implementation and design rationale for a change, refer to the PEP for a particular new feature; but note that PEPs usually are not kept up-to-date once a feature has been fully implemented. See Porting to Python 3.14 for guidance on upgrading from earlier versions of Python.
+
+Interpreter improvements:
+
+    PEP 649 and PEP 749: Deferred evaluation of annotations
+
+    PEP 734: Multiple interpreters in the standard library
+
+    PEP 750: Template strings
+
+    PEP 758: Allow except and except* expressions without brackets
+
+    PEP 765: Control flow in finally blocks
+
+    PEP 768: Safe external debugger interface for CPython
+
+    A new type of interpreter
+
+    Free-threaded mode improvements
+
+    Improved error messages
+
+    Incremental garbage collection
+
+Significant improvements in the standard library:
+
+    PEP 784: Zstandard support in the standard library
+
+    Asyncio introspection capabilities
+
+    Concurrent safe warnings control
+
+    Syntax highlighting in the default interactive shell, and color output in several standard library CLIs
+
+C API improvements:
+
+    PEP 741: Python configuration C API
+
+Platform support:
+
+    PEP 776: Emscripten is now an officially supported platform, at tier 3.
+
+Release changes:
+
+    PEP 779: Free-threaded Python is officially supported
+
+    PEP 761: PGP signatures have been discontinued for official releases
+
+    Windows and macOS binary releases now support the experimental just-in-time compiler
+
+    Binary releases for Android are now provided
+
+New features
+PEP 649 & PEP 749: Deferred evaluation of annotations¶
