@@ -2,9 +2,6 @@ import requests
 import threading
 
 
-url_first_image = "https://images.unsplash.com/photo-1775748525937-81ebe1f64827?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-url_second_image = "https://images.unsplash.com/photo-1775807346196-c12ab3c53d73?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-
 def download_file(url: str, filename: str) -> None:
     """Function for download one file"""
 

@@ -10,6 +10,7 @@ def calculate_part_of_factorial(start: int, end: int) -> int:
         result *= i
     return result
 
+
 def paralell_factorial(number: int, num_processes: int = None) -> int:
     """Calculating a factorial by multiprocessing"""
 
