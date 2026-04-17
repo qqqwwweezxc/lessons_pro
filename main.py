@@ -1,46 +1,60 @@
-import asyncio
-import random
+# собирать данные про книжки , с первой странички , ддя каждой книжки собрать название книжки, цену, 
+# рейтинг, и availability на складе, сохранить все в csv , один рядок - одна книжка 
+import requests
+from bs4 import BeautifulSoup
+import csv
 
 
-async def cook(name, queue):
-    while True:
-        order = await queue.get()
-        print(f"👨‍🍳 Кухар {name} розпочав готувати {order}...")
-        cook_time = random.uniform(2, 5)
-        await asyncio.sleep(cook_time)
-        print(f"✅ Кухар {name} видав {order} за {cook_time:.2f}с.")
-        queue.task_done()
+URL = "https://books.toscrape.com/"
 
 
-async def cashier(name, queue, orders_count):
-    for i in range(1, orders_count + 1):
-        order_name = f"Замовлення #{i}"
-        await queue.put(order_name)
-        print(f"💰 Касир {name} прийняв {order_name} і передав на кухню.")
-        await asyncio.sleep(random.uniform(0.5, 1.5))
+def scrape_books(url: str) -> list[dict]:
+    """Scrape books data from the given URL."""
+    response = requests.get(url)
+    response.raise_for_status()
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    books = soup.find_all("article", class_ = "product_pod")
+
+    results = []
+
+    for book in books:
+        title = book.h3.a.get("title", "No title")
+        
+        price = book.find("p", class_ = "price_color").text
+        rating_class = book.find("p", class_="star-rating")["class"][1]
+        ratings = {
+        "One": "1",
+        "Two": "2",
+        "Three": "3",
+        "Four": "4",
+        "Five": "5",
+    }
+        rating = ratings.get(rating_class, "0")
+        availability = book.find("p", class_ = "instock availability").text.strip()
+        
+        results.append({
+            "title": title,
+            "price": price,
+            "rating": rating,
+            "availability": availability,
+        })
+
+    return results
 
 
-async def main():
-    kitchen_queue = asyncio.Queue()
+def save_to_csv(data: list[dict], filename: str) -> None:
+    """Save scraped data to CSV file."""
+    with open(filename, "w", newline="", encoding="utf-8") as file:
+        writer = csv.DictWriter(
+            file,
+            fieldnames=["title", "price", "rating", "availability"]
+        )
+        writer.writeheader()
+        writer.writerows(data)
 
-    cooks = [
-        asyncio.create_task(cook("Stephan", kitchen_queue)),
-        asyncio.create_task(cook("Danil", kitchen_queue)),
-        asyncio.create_task(cook("Volodimir", kitchen_queue))
-    ]
-
-    cashiers = [
-        asyncio.create_task(cashier("Olha", kitchen_queue, 5)),
-        asyncio.create_task(cashier("Bohdan", kitchen_queue, 5))
-    ]
-
-    await asyncio.gather(*cashiers)
-    await kitchen_queue.join()
-
-    for c in cooks:
-        c.cancel()
-
-    print("\n🚀 Всі замовлення видані! Ресторан зачиняється.")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    books = scrape_books(URL)
+    save_to_csv(books, "books.csv")
+    print(f"Saved {len(books)} books to books.csv")
